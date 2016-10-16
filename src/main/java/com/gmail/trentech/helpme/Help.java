@@ -9,8 +9,6 @@ import java.util.function.Consumer;
 
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.entity.living.player.Player;
-import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.service.pagination.PaginationService;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
@@ -88,6 +86,8 @@ public class Help {
 		map.put(getRawCommand(), this);
 	}
 
+
+	
 	public void execute(CommandSource src) {
 		List<Text> list = new ArrayList<>();
 
@@ -137,27 +137,33 @@ public class Help {
 			}
 		};
 	}
-	
-	public static void executeList(CommandSource src, String rawCommand) {
-		List<Text> list = new ArrayList<>();
 
-		list.addAll(getList(src, rawCommand));
+	public static void executeList(CommandSource src, List<Help> list) {
+		List<Text> pages = new ArrayList<>();
+		
+		for (Help help : list) {
 
-		if (src instanceof Player) {
-			PaginationList.Builder pages = Sponge.getServiceManager().provide(PaginationService.class).get().builder();
-
-			pages.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Command List")).build());
-
-			pages.contents(list);
-
-			pages.sendTo(src);
-		} else {
-			for (Text text : list) {
-				src.sendMessage(text);
+			Optional<String> optionalPermission = help.getPermission();
+			
+			if(optionalPermission.isPresent()) {
+				if (src.hasPermission(optionalPermission.get())) {
+					if(help.hasChildren()) {
+						pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.runCommand("/" + help.getRawCommand())).append(Text.of("/" + help.getRawCommand())).build());
+					} else {
+						pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.execute(help.getRawCommand()))).append(Text.of("/" + help.getRawCommand())).build());
+					}	
+				}
+			} else {
+				if(help.hasChildren()) {
+					pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.runCommand("/" + help.getRawCommand())).append(Text.of("/" + help.getRawCommand())).build());
+				} else {
+					pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.execute(help.getRawCommand()))).append(Text.of("/" + help.getRawCommand())).build());
+				}
 			}
 		}
+		
+		src.sendMessages(pages);
 	}
-	
 	public static List<Help> getParents() {
 		List<Help> list = new ArrayList<>();
 		
@@ -194,40 +200,5 @@ public class Help {
 		}
 
 		return list;
-	}
-	
-	public static List<Text> getList(CommandSource src) {
-		return getList(src, getParents());
-	}
-	
-	public static List<Text> getList(CommandSource src, String parentCommand) {
-		return getList(src, getChildren(parentCommand));
-	}
-	
-	private static List<Text> getList(CommandSource src, List<Help> list) {
-		List<Text> pages = new ArrayList<>();
-		
-		for (Help help : list) {
-
-			Optional<String> optionalPermission = help.getPermission();
-			
-			if(optionalPermission.isPresent()) {
-				if (src.hasPermission(optionalPermission.get())) {
-					if(help.hasChildren()) {
-						pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.runCommand("/" + help.getRawCommand())).append(Text.of("/" + help.getRawCommand())).build());
-					} else {
-						pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.execute(help.getRawCommand()))).append(Text.of("/" + help.getRawCommand())).build());
-					}	
-				}
-			} else {
-				if(help.hasChildren()) {
-					pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.runCommand("/" + help.getRawCommand())).append(Text.of("/" + help.getRawCommand())).build());
-				} else {
-					pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.execute(help.getRawCommand()))).append(Text.of("/" + help.getRawCommand())).build());
-				}
-			}
-		}
-		
-		return pages;
 	}
 }
