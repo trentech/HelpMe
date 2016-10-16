@@ -23,9 +23,15 @@ public class CMDHelp implements CommandExecutor {
 		Optional<Help> optionalHelp = args.<Help>getOne("rawCommand");
 		
 		if(optionalHelp.isPresent()) {
-			optionalHelp.get().execute(src);
+			Help help = optionalHelp.get();
+			
+			if(help.hasChildren()) {
+				Help.executeList(src, Help.getChildren(help.getRawCommand()));	
+			} else {
+				help.execute(src);
+			}
 		} else {
-			Help.executeList(src, Help.getAll());	
+			Help.executeList(src, Help.getParents());	
 		}	
 
 		return CommandResult.success();

@@ -7,9 +7,9 @@ import java.util.Optional;
 import java.util.TreeMap;
 import java.util.function.Consumer;
 
-import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
-import org.spongepowered.api.service.pagination.PaginationService;
+import org.spongepowered.api.entity.living.player.Player;
+import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColors;
@@ -115,7 +115,7 @@ public class Help {
 			list.add(Text.of(TextColors.WHITE, " ", example.get(), TextColors.DARK_GREEN));
 		}
 
-		Sponge.getServiceManager().provide(PaginationService.class).get().builder()
+		PaginationList.builder()
 				.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, getCommand().toLowerCase())).build())
 				.contents(list)
 				.sendTo(src);
@@ -138,6 +138,12 @@ public class Help {
 		};
 	}
 
+	public static Consumer<CommandSource> executeList(List<Help> list) {
+		return (CommandSource src) -> {
+			executeList(src, list);
+		};
+	}
+	
 	public static void executeList(CommandSource src, List<Help> list) {
 		List<Text> pages = new ArrayList<>();
 		
@@ -148,22 +154,32 @@ public class Help {
 			if(optionalPermission.isPresent()) {
 				if (src.hasPermission(optionalPermission.get())) {
 					if(help.hasChildren()) {
-						pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.runCommand("/" + help.getRawCommand())).append(Text.of("/" + help.getRawCommand())).build());
+						pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(Help.getChildren(help.getRawCommand())))).append(Text.of("/" + help.getRawCommand())).build());
 					} else {
 						pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.execute(help.getRawCommand()))).append(Text.of("/" + help.getRawCommand())).build());
 					}	
 				}
 			} else {
 				if(help.hasChildren()) {
-					pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.runCommand("/" + help.getRawCommand())).append(Text.of("/" + help.getRawCommand())).build());
+					pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(Help.getChildren(help.getRawCommand())))).append(Text.of("/" + help.getRawCommand())).build());
 				} else {
 					pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(Help.execute(help.getRawCommand()))).append(Text.of("/" + help.getRawCommand())).build());
 				}
 			}
 		}
 		
-		src.sendMessages(pages);
+		if (src instanceof Player) {
+			PaginationList.builder()
+					.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Command List")).build())
+					.contents(pages)
+					.sendTo(src);
+		} else {
+			for (Text text : pages) {
+				src.sendMessage(text);
+			}
+		}
 	}
+	
 	public static List<Help> getParents() {
 		List<Help> list = new ArrayList<>();
 		
