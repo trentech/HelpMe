@@ -78,16 +78,10 @@ public class Help {
 		return command;
 	}
 
-	public boolean isParent() {
-		return CharMatcher.WHITESPACE.matchesNoneOf(getRawCommand());
-	}
-	
 	public void save() {
 		map.put(getRawCommand(), this);
 	}
 
-
-	
 	public void execute(CommandSource src) {
 		List<Text> list = new ArrayList<>();
 
@@ -186,7 +180,7 @@ public class Help {
 		for(Entry<String, Help> entry : map.entrySet()) {
 			Help help = entry.getValue();
 			
-			if(help.isParent()) {
+			if(CharMatcher.WHITESPACE.matchesNoneOf(help.getRawCommand())) {
 				list.add(help);
 			}
 		}
@@ -200,8 +194,18 @@ public class Help {
 		for(Entry<String, Help> entry : map.entrySet()) {
 			Help help = entry.getValue();
 
-			if(help.getRawCommand().startsWith(parentCommand) && !help.isParent()) {
-				list.add(help);
+			if(help.getRawCommand().startsWith(parentCommand)) {
+				String child = help.getRawCommand().replace(parentCommand, "");
+				
+				if(child.equals("")) {
+					continue;
+				}
+				
+				child = child.substring(1, child.length() - 1);
+				
+				if(CharMatcher.WHITESPACE.matchesNoneOf(child)) {
+					list.add(help);
+				}
 			}
 		}
 
