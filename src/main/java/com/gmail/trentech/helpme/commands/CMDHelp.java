@@ -20,13 +20,13 @@ public class CMDHelp implements CommandExecutor {
 
 	@Override
 	public CommandResult execute(CommandSource src, CommandContext args) throws CommandException {
-		Optional<Help> optionalHelp = args.<Help>getOne("rawCommand");
+		Optional<Help> optionalHelp = args.getOne("rawCommand");
 		
 		if(optionalHelp.isPresent()) {
 			Help help = optionalHelp.get();
 			
-			if(help.hasChildren()) {
-				Help.executeList(src, Help.getChildren(help.getRawCommand()));	
+			if(!help.getChildren().isEmpty()) {
+				Help.executeList(src, help.getChildren());	
 			} else {
 				help.execute(src);
 			}
