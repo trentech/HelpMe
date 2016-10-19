@@ -104,8 +104,8 @@ public class HelpElement extends CommandElement {
         		}
         	}
     	}
-
-        return list;
+		
+		return list;
     }
 
     @Override

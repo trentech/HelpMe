@@ -158,6 +158,22 @@ public class Main {
 			Help.register(help);
 		}
 
+		if (!Help.get("weather").isPresent()) {
+			Help help = new Help("weather", "weather", "Sets the weather.").setPermission("minecraft.command.weather").setUsage("/weather <clear|rain|thunder> [duration]").setExample("/weather clear 9000");
+
+			writeJson(gson, help);
+
+			Help.register(help);
+		}
+
+		if (!Help.get("teleport").isPresent()) {
+			Help help = new Help("teleport", "teleport", "Teleports entities (players, mobs, items, etc.).").setPermission("minecraft.command.teleport").setUsage("/teleport <target entity> <x> <y> <z> [<y-rot> <x-rot>]").setExample("/teleport MonroeTT -150 76 456");
+
+			writeJson(gson, help);
+
+			Help.register(help);
+		}
+		
 		if(!Help.get("sponge").isPresent()) {
 			Help spongeReload = new Help("sponge reload", "reload", "Asks plugins to perform their own reload procedures.").setPermission("sponge.command.reload").setUsage("/sponge reload");
 			Help spongeAudit = new Help("sponge audit", "audit", "Forces loading of unloaded classes to enable mixin debugging.").setPermission("sponge.command.audit").setUsage("/sponge audit");
@@ -183,23 +199,7 @@ public class Main {
 			
 			Help.register(sponge);
 		}
-		
-		if (!Help.get("weather").isPresent()) {
-			Help help = new Help("weather", "weather", "Sets the weather.").setPermission("minecraft.command.weather").setUsage("/weather <clear|rain|thunder> [duration]").setExample("/weather clear 9000");
 
-			writeJson(gson, help);
-
-			Help.register(help);
-		}
-
-		if (!Help.get("teleport").isPresent()) {
-			Help help = new Help("teleport", "teleport", "Teleports entities (players, mobs, items, etc.).").setPermission("minecraft.command.teleport").setUsage("/teleport <target entity> <x> <y> <z> [<y-rot> <x-rot>]").setExample("/teleport MonroeTT -150 76 456");
-
-			writeJson(gson, help);
-
-			Help.register(help);
-		}
-		
 		Sponge.getEventManager().registerListeners(this, new EventListener());
 		Sponge.getCommandManager().register(this, CMDHelp.cmdHelp, "helpme", "hm");
 	}

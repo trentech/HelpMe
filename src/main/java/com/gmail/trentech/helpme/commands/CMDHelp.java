@@ -25,7 +25,7 @@ public class CMDHelp implements CommandExecutor {
     		Collection<Help> collection = args.<Help>getAll("rawCommand");
     		
     		Help help = collection.toArray(new Help[collection.size()])[collection.size() - 1];
-    		
+
 			if(!help.getChildren().isEmpty()) {
 				Help.executeList(src, help.getChildren());	
 			} else {
