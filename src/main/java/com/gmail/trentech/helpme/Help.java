@@ -18,8 +18,8 @@ public class Help implements Comparable<Help> {
 	private final String command;
 	private final String description;
 	private Optional<String> permission = Optional.empty();
-	private Optional<String> usage = Optional.empty();
-	private Optional<String> example = Optional.empty();
+	private List<String> usages = new ArrayList<>();
+	private List<String> examples = new ArrayList<>();
 	private List<Help> children = new ArrayList<>();
 	
 	private static List<Help> list = new ArrayList<>();
@@ -41,12 +41,12 @@ public class Help implements Comparable<Help> {
 	public Optional<String> getPermission() {
 		return permission;
 	}
-	public Optional<String> getUsage() {
-		return usage;
+	public List<String> getUsages() {
+		return usages;
 	}
 	
-	public Optional<String> getExample() {
-		return example;
+	public List<String> getExamples() {
+		return examples;
 	}
 	
 	public String getCommand() {
@@ -62,13 +62,13 @@ public class Help implements Comparable<Help> {
 		return this;
 	}
 
-	public Help setUsage(String usage) {
-		this.usage = Optional.of(usage);
+	public Help addUsage(String usage) {
+		this.usages.add(usage);
 		return this;
 	}
 
-	public Help setExample(String example) {
-		this.example = Optional.of(example);
+	public Help addExample(String example) {
+		this.examples.add(example);
 		return this;
 	}
 
@@ -90,18 +90,24 @@ public class Help implements Comparable<Help> {
 			list.add(Text.of(TextColors.WHITE, " ", permission.get()));
 		}
 		
-		Optional<String> usage = getUsage();
+		List<String> usages = getUsages();
 		
-		if (usage.isPresent()) {
-			list.add(Text.of(TextColors.GREEN, "Syntax:"));
-			list.add(Text.of(TextColors.WHITE, " ", usage.get()));
+		if (!usages.isEmpty()) {
+			list.add(Text.of(TextColors.GREEN, "Usage:"));
+			
+			for(String usage : usages) {
+				list.add(Text.of(TextColors.WHITE, " ", usage));
+			}
 		}
 		
-		Optional<String> example = getExample();
+		List<String> examples = getExamples();
 		
-		if (example.isPresent()) {
+		if (!examples.isEmpty()) {
 			list.add(Text.of(TextColors.GREEN, "Example:"));
-			list.add(Text.of(TextColors.WHITE, " ", example.get(), TextColors.DARK_GREEN));
+			
+			for(String example : examples) {
+				list.add(Text.of(TextColors.WHITE, " ", example, TextColors.DARK_GREEN));
+			}		
 		}
 
 		PaginationList.builder()

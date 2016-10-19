@@ -79,7 +79,7 @@ public class Main {
 		}
 		
 		if (!Help.get("clear").isPresent()) {
-			Help help = new Help("clear", "clear", "Clears items from player inventory.").setPermission("minecraft.command.clear").setUsage("/clear [player] [item] [data] [maxCount] [dataTag]").setExample("/clear MonroeTT minecraft:redstone");
+			Help help = new Help("clear", "clear", "Clears items from player inventory.").setPermission("minecraft.command.clear").addUsage("/clear [player] [item] [data] [maxCount] [dataTag]").addExample("/clear MonroeTT minecraft:redstone");
 
 			writeJson(gson, help);
 
@@ -87,7 +87,7 @@ public class Main {
 		}
 
 		if (!Help.get("difficulty").isPresent()) {
-			Help help = new Help("difficulty", "difficulty", "Sets the difficulty level (peaceful, easy, etc.).").setPermission("minecraft.command.difficulty").setUsage("/difficulty <difficulty>").setExample("/difficulty hard");
+			Help help = new Help("difficulty", "difficulty", "Sets the difficulty level (peaceful, easy, etc.).").setPermission("minecraft.command.difficulty").addUsage("/difficulty <difficulty>").addExample("/difficulty hard");
 
 			writeJson(gson, help);
 
@@ -95,7 +95,7 @@ public class Main {
 		}
 
 		if (!Help.get("gamemode").isPresent()) {
-			Help help = new Help("gamemode", "gamemode", "Sets a player's game mode.").setPermission("minecraft.command.gamemode").setUsage("/gamemode <mode> [player]").setExample("/gamemode SURVIVAL");
+			Help help = new Help("gamemode", "gamemode", "Sets a player's game mode.").setPermission("minecraft.command.gamemode").addUsage("/gamemode <mode> [player]").addExample("/gamemode SURVIVAL");
 
 			writeJson(gson, help);
 
@@ -103,7 +103,7 @@ public class Main {
 		}
 
 		if (!Help.get("gamerule").isPresent()) {
-			Help help = new Help("gamerule", "gamerule", "Sets or queries a game rule value.").setPermission("minecraft.command.gamerule").setUsage("/gamerule <rule name> [value]").setExample("/gamerule doDaylightCycle false");
+			Help help = new Help("gamerule", "gamerule", "Sets or queries a game rule value.").setPermission("minecraft.command.gamerule").addUsage("/gamerule <rule name> [value]").addExample("/gamerule doDaylightCycle false");
 
 			writeJson(gson, help);
 
@@ -111,7 +111,7 @@ public class Main {
 		}
 
 		if (!Help.get("give").isPresent()) {
-			Help help = new Help("give", "give", "Gives an item to a player.").setPermission("minecraft.command.give").setUsage("/give <player> <item> [amount] [data] [dataTag]").setExample("/give MonroeTT minecraft:diamond 64");
+			Help help = new Help("give", "give", "Gives an item to a player.").setPermission("minecraft.command.give").addUsage("/give <player> <item> [amount] [data] [dataTag]").addExample("/give MonroeTT minecraft:diamond 64");
 
 			writeJson(gson, help);
 
@@ -119,7 +119,7 @@ public class Main {
 		}
 
 		if (!Help.get("kill").isPresent()) {
-			Help help = new Help("kill", "kill", "Kills entities (players, mobs, items, etc.).").setPermission("minecraft.command.kill").setUsage("/kill [player|entity]").setExample("/kill MonroeTT");
+			Help help = new Help("kill", "kill", "Kills entities (players, mobs, items, etc.).").setPermission("minecraft.command.kill").addUsage("/kill [player|entity]").addExample("/kill MonroeTT");
 
 			writeJson(gson, help);
 
@@ -127,7 +127,7 @@ public class Main {
 		}
 
 		if (!Help.get("kick").isPresent()) {
-			Help help = new Help("kick", "kick", "Kicks a player off a server.").setPermission("minecraft.command.kick").setUsage("/kick <player> [reason ...]").setExample("/kick MonroeTT stop being a jerk");
+			Help help = new Help("kick", "kick", "Kicks a player off a server.").setPermission("minecraft.command.kick").addUsage("/kick <player> [reason ...]").addExample("/kick MonroeTT stop being a jerk");
 
 			writeJson(gson, help);
 
@@ -135,7 +135,7 @@ public class Main {
 		}
 
 		if (!Help.get("list").isPresent()) {
-			Help help = new Help("list", "list", "Lists players on the server.").setPermission("minecraft.command.list").setUsage("/list [uuids]");
+			Help help = new Help("list", "list", "Lists players on the server.").setPermission("minecraft.command.list").addUsage("/list [uuids]");
 
 			writeJson(gson, help);
 
@@ -143,7 +143,7 @@ public class Main {
 		}
 
 		if (!Help.get("pardon").isPresent()) {
-			Help help = new Help("pardon", "pardon", "Removes entries from the banlist.").setPermission("minecraft.command.pardon").setUsage("/pardon <name>").setExample("/pardon MonroeTT");
+			Help help = new Help("pardon", "pardon", "Removes entries from the banlist.").setPermission("minecraft.command.pardon").addUsage("/pardon <name>").addExample("/pardon MonroeTT");
 
 			writeJson(gson, help);
 
@@ -151,7 +151,7 @@ public class Main {
 		}
 		
 		if(!Help.get("say").isPresent()) {
-			Help help = new Help("say", "say", "Sends a message in the chat to other players.").setPermission("minecraft.command.say").setUsage("/say <message ...>").setExample("/say Hello world!");
+			Help help = new Help("say", "say", "Sends a message in the chat to other players.").setPermission("minecraft.command.say").addUsage("/say <message ...>").addExample("/say Hello world!");
 			
 			writeJson(gson, help);
 			
@@ -159,7 +159,7 @@ public class Main {
 		}
 
 		if (!Help.get("weather").isPresent()) {
-			Help help = new Help("weather", "weather", "Sets the weather.").setPermission("minecraft.command.weather").setUsage("/weather <clear|rain|thunder> [duration]").setExample("/weather clear 9000");
+			Help help = new Help("weather", "weather", "Sets the weather.").setPermission("minecraft.command.weather").addUsage("/weather <clear|rain|thunder> [duration]").addExample("/weather clear 9000");
 
 			writeJson(gson, help);
 
@@ -167,7 +167,7 @@ public class Main {
 		}
 
 		if (!Help.get("teleport").isPresent()) {
-			Help help = new Help("teleport", "teleport", "Teleports entities (players, mobs, items, etc.).").setPermission("minecraft.command.teleport").setUsage("/teleport <target entity> <x> <y> <z> [<y-rot> <x-rot>]").setExample("/teleport MonroeTT -150 76 456");
+			Help help = new Help("teleport", "teleport", "Teleports entities (players, mobs, items, etc.).").setPermission("minecraft.command.teleport").addUsage("/teleport <target entity> <x> <y> <z> [<y-rot> <x-rot>]").addExample("/teleport MonroeTT -150 76 456");
 
 			writeJson(gson, help);
 
@@ -175,15 +175,15 @@ public class Main {
 		}
 		
 		if(!Help.get("sponge").isPresent()) {
-			Help spongeReload = new Help("sponge reload", "reload", "Asks plugins to perform their own reload procedures.").setPermission("sponge.command.reload").setUsage("/sponge reload");
-			Help spongeAudit = new Help("sponge audit", "audit", "Forces loading of unloaded classes to enable mixin debugging.").setPermission("sponge.command.audit").setUsage("/sponge audit");
-			Help spongeTimingsCost = new Help("sponge timings cost", "cost", "Gets the cost of using timings.").setPermission("sponge.command.timings").setUsage("/sponge timings cost");
-			Help spongeTimingsVerboff = new Help("sponge timings verboff", "verboff", "Disables timings monitoring at the verbose level. Note that high-frequency timings will not be available.").setPermission("sponge.command.timings").setUsage("/sponge timings verboff");	
-			Help spongeTimingsVerbon = new Help("sponge timings verbon", "verbon", "Enables timings monitoring at the verbose level.").setPermission("sponge.command.timings").setUsage("/sponge timings verbon");	
-			Help spongeTimingsReport = new Help("sponge timings report", "report", "Generates the timings report on your server performance at http://timings.aikar.co").setPermission("sponge.command.timings").setUsage("/sponge timings report");
-			Help spongeTimingsReset = new Help("sponge timings reset", "reset", "Resets all timing data and begins recording timing data after the time this command was done.").setPermission("sponge.command.timings").setUsage("/sponge timings reset");
-			Help spongeTimingsOff = new Help("sponge timings off", "off", "Disables timings. Note that most timings commands will not function and timings will not be recorded if timings are disabled.").setPermission("sponge.command.timings").setUsage("/sponge timings off");
-			Help spongeTimingsOn = new Help("sponge timings on", "on", "Enables timings. Note that this will also reset timings data.").setPermission("sponge.command.timings").setUsage("/sponge timings on");
+			Help spongeReload = new Help("sponge reload", "reload", "Asks plugins to perform their own reload procedures.").setPermission("sponge.command.reload").addUsage("/sponge reload");
+			Help spongeAudit = new Help("sponge audit", "audit", "Forces loading of unloaded classes to enable mixin debugging.").setPermission("sponge.command.audit").addUsage("/sponge audit");
+			Help spongeTimingsCost = new Help("sponge timings cost", "cost", "Gets the cost of using timings.").setPermission("sponge.command.timings").addUsage("/sponge timings cost");
+			Help spongeTimingsVerboff = new Help("sponge timings verboff", "verboff", "Disables timings monitoring at the verbose level. Note that high-frequency timings will not be available.").setPermission("sponge.command.timings").addUsage("/sponge timings verboff");	
+			Help spongeTimingsVerbon = new Help("sponge timings verbon", "verbon", "Enables timings monitoring at the verbose level.").setPermission("sponge.command.timings").addUsage("/sponge timings verbon");	
+			Help spongeTimingsReport = new Help("sponge timings report", "report", "Generates the timings report on your server performance at http://timings.aikar.co").setPermission("sponge.command.timings").addUsage("/sponge timings report");
+			Help spongeTimingsReset = new Help("sponge timings reset", "reset", "Resets all timing data and begins recording timing data after the time this command was done.").setPermission("sponge.command.timings").addUsage("/sponge timings reset");
+			Help spongeTimingsOff = new Help("sponge timings off", "off", "Disables timings. Note that most timings commands will not function and timings will not be recorded if timings are disabled.").setPermission("sponge.command.timings").addUsage("/sponge timings off");
+			Help spongeTimingsOn = new Help("sponge timings on", "on", "Enables timings. Note that this will also reset timings data.").setPermission("sponge.command.timings").addUsage("/sponge timings on");
 			Help spongeTimings = new Help("sponge timings", "timings", "The main command for the timings module.").setPermission("sponge.command.timings")
 					.addChild(spongeTimingsCost)
 					.addChild(spongeTimingsVerboff)
