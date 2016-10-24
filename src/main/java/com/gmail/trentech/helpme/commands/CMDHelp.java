@@ -11,8 +11,8 @@ import org.spongepowered.api.command.spec.CommandExecutor;
 import org.spongepowered.api.command.spec.CommandSpec;
 import org.spongepowered.api.text.Text;
 
-import com.gmail.trentech.helpme.Help;
 import com.gmail.trentech.helpme.commands.elements.HelpElement;
+import com.gmail.trentech.helpme.help.Help;
 
 public class CMDHelp implements CommandExecutor {
 

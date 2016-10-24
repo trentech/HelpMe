@@ -3,6 +3,8 @@ package com.gmail.trentech.helpme;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.command.TabCompleteEvent;
 
+import com.gmail.trentech.helpme.help.Help;
+
 public class EventListener {
 
 	@Listener

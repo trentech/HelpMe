@@ -13,7 +13,7 @@ import org.spongepowered.api.command.args.CommandElement;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.format.TextColors;
 
-import com.gmail.trentech.helpme.Help;
+import com.gmail.trentech.helpme.help.Help;
 
 public class HelpElement extends CommandElement {
 
