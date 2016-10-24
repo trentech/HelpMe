@@ -18,7 +18,7 @@ public class Help implements Comparable<Help> {
 	private final String command;
 	private final String description;
 	private Optional<String> permission = Optional.empty();
-	private List<Usage> usages = new ArrayList<>();
+	private Optional<Usage> usage = Optional.empty();
 	private List<String> examples = new ArrayList<>();
 	private List<Help> children = new ArrayList<>();
 	
@@ -42,8 +42,8 @@ public class Help implements Comparable<Help> {
 		return permission;
 	}
 	
-	public List<Usage> getUsages() {
-		return usages;
+	public Optional<Usage> getUsage() {
+		return usage;
 	}
 	
 	public List<String> getExamples() {
@@ -63,8 +63,8 @@ public class Help implements Comparable<Help> {
 		return this;
 	}
 
-	public Help addUsage(Usage usage) {
-		this.usages.add(usage);
+	public Help setUsage(Usage usage) {
+		this.usage = Optional.of(usage);
 		return this;
 	}
 
@@ -91,33 +91,33 @@ public class Help implements Comparable<Help> {
 			list.add(Text.of(TextColors.WHITE, " ", permission.get()));
 		}
 		
-		List<Usage> usages = getUsages();
+		Optional<Usage> optionalUsage = getUsage();
 		
-		if (!usages.isEmpty()) {
+		if (optionalUsage.isPresent()) {
+			Usage usage = optionalUsage.get();
+			
 			list.add(Text.of(TextColors.GREEN, "Usage:"));
 			
-			for(Usage usage : usages) {
-				Text command = Text.of(" /", getRawCommand());
+			Text command = Text.of(" /", getRawCommand());
 
-				for(Argument argument : usage.getArguments()) {
-					Optional<String> description = argument.getDescription();
+			for(Argument argument : usage.getArguments()) {
+				Optional<String> description = argument.getDescription();
 
-					if(description.isPresent()) {
-						StringBuilder sb = new StringBuilder(description.get());
+				if(description.isPresent()) {
+					StringBuilder sb = new StringBuilder(description.get());
 
-						int i = 0;
-						while ((i = sb.indexOf(" ", i + 50)) != -1) {
-						    sb.replace(i, i + 1, "\n");
-						}
-
-						command = Text.join(command, Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
-					} else {
-						command = Text.join(command, Text.of(" "), Text.of(argument.getKey()));
+					int i = 0;
+					while ((i = sb.indexOf(" ", i + 50)) != -1) {
+					    sb.replace(i, i + 1, "\n");
 					}
+
+					command = Text.join(command, Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
+				} else {
+					command = Text.join(command, Text.of(" "), Text.of(argument.getKey()));
 				}
-				
-				list.add(Text.of(TextColors.WHITE, command));
 			}
+			
+			list.add(Text.of(TextColors.WHITE, command));
 		}
 		
 		List<String> examples = getExamples();

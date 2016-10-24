@@ -51,7 +51,7 @@ public class CommandHelp {
 			
 			Help help = new Help("clear", "clear", "Clears items from player inventory.")
 					.setPermission("minecraft.command.clear")
-					.addUsage(usage)
+					.setUsage(usage)
 					.addExample("/clear MonroeTT minecraft:redstone");
 
 			writeJson(gson, help);
@@ -63,7 +63,10 @@ public class CommandHelp {
 			Usage usage = new Usage()
 					.addArgument(new Argument("<difficulty>", "Specifies the new difficulty level. Must be one of the following: peaceful(0), easy(1), normal(2), hard(3)"));
 			
-			Help help = new Help("difficulty", "difficulty", "Sets the difficulty level (peaceful, easy, etc.).").setPermission("minecraft.command.difficulty").addUsage(usage).addExample("/difficulty hard");
+			Help help = new Help("difficulty", "difficulty", "Sets the difficulty level (peaceful, easy, etc.).")
+					.setPermission("minecraft.command.difficulty")
+					.setUsage(usage)
+					.addExample("/difficulty hard");
 
 			writeJson(gson, help);
 
@@ -75,7 +78,10 @@ public class CommandHelp {
 					.addArgument(new Argument("<mode>", "Must be one of the following: survival(0), creative(1), adventure(2), spectator(3)"))
 					.addArgument(new Argument("[player]", "If specified, must be either a player's username or a target selector. If unspecified, defaults to the player using the command."));
 			
-			Help help = new Help("gamemode", "gamemode", "Sets a player's game mode.").setPermission("minecraft.command.gamemode").addUsage(usage).addExample("/gamemode SURVIVAL");
+			Help help = new Help("gamemode", "gamemode", "Sets a player's game mode.")
+					.setPermission("minecraft.command.gamemode")
+					.setUsage(usage)
+					.addExample("/gamemode SURVIVAL");
 
 			writeJson(gson, help);
 
@@ -87,7 +93,10 @@ public class CommandHelp {
 					.addArgument(new Argument("<rule name>","Specifies the game rule to set or query. May be any value, but only certain predefined game rules will affect gameplay."))
 					.addArgument(new Argument("[value]","Specifies the value to set the game rule to. May be any value, though only true or false specified for predefined game rules will actually affect gameplay, except in the case of randomTickSpeed and spawnRadius, where any integer 0 or greater will affect gameplay"));
 			
-			Help help = new Help("gamerule", "gamerule", "Sets or queries a game rule value.").setPermission("minecraft.command.gamerule").addUsage(usage).addExample("/gamerule doDaylightCycle false");
+			Help help = new Help("gamerule", "gamerule", "Sets or queries a game rule value.")
+					.setPermission("minecraft.command.gamerule")
+					.setUsage(usage)
+					.addExample("/gamerule doDaylightCycle false");
 
 			writeJson(gson, help);
 
@@ -102,7 +111,10 @@ public class CommandHelp {
 					.addArgument(new Argument("[data]", "Specifies the item data of the given item(s). Must be an integer between -2,147,483,648 and 2,147,483,647 (inclusive, without the commas), but values which are invalid for the specified item id revert to 0. If not specified, defaults to 0."))
 					.addArgument(new Argument("[dataTag]", "Specifies the data tag of the given item(s). Must be a compound NBT tag (for example, {display:{Name:Fred}})."));
 			
-			Help help = new Help("give", "give", "Gives an item to a player.").setPermission("minecraft.command.give").addUsage(usage).addExample("/give MonroeTT minecraft:diamond 64");
+			Help help = new Help("give", "give", "Gives an item to a player.")
+					.setPermission("minecraft.command.give")
+					.setUsage(usage)
+					.addExample("/give MonroeTT minecraft:diamond 64");
 
 			writeJson(gson, help);
 
@@ -113,7 +125,10 @@ public class CommandHelp {
 			Usage usage = new Usage()
 					.addArgument(new Argument("[player|entity]", "Specifies the target(s) to be killed (including 'non-living' entities like items, vehicles, etc.). Must be a player name or a target selector. If not specified, defaults to the command's user. Not optional in command blocks"));
 			
-			Help help = new Help("kill", "kill", "Kills entities (players, mobs, items, etc.).").setPermission("minecraft.command.kill").addUsage(usage).addExample("/kill MonroeTT");
+			Help help = new Help("kill", "kill", "Kills entities (players, mobs, items, etc.).")
+					.setPermission("minecraft.command.kill")
+					.setUsage(usage)
+					.addExample("/kill MonroeTT");
 
 			writeJson(gson, help);
 
@@ -124,7 +139,11 @@ public class CommandHelp {
 			Usage usage = new Usage()
 					.addArgument(new Argument("<player>"))
 					.addArgument(new Argument("[reason ...]"));
-			Help help = new Help("kick", "kick", "Kicks a player off a server.").setPermission("minecraft.command.kick").addUsage(usage).addExample("/kick MonroeTT stop being a jerk");
+			
+			Help help = new Help("kick", "kick", "Kicks a player off a server.")
+					.setPermission("minecraft.command.kick")
+					.setUsage(usage)
+					.addExample("/kick MonroeTT stop being a jerk");
 
 			writeJson(gson, help);
 
@@ -135,7 +154,9 @@ public class CommandHelp {
 			Usage usage = new Usage()
 					.addArgument(new Argument("[uuids]", "If 'uuids' is specified, player UUIDs will be shown alongside names"));
 					
-			Help help = new Help("list", "list", "Lists players on the server.").setPermission("minecraft.command.list").addUsage(usage);
+			Help help = new Help("list", "list", "Lists players on the server.")
+					.setPermission("minecraft.command.list")
+					.setUsage(usage);
 
 			writeJson(gson, help);
 
@@ -146,7 +167,10 @@ public class CommandHelp {
 			Usage usage = new Usage()
 					.addArgument(new Argument("<name>", "Specifies the name to remove from the banlist."));
 			
-			Help help = new Help("pardon", "pardon", "Removes entries from the banlist.").setPermission("minecraft.command.pardon").addUsage(usage).addExample("/pardon MonroeTT");
+			Help help = new Help("pardon", "pardon", "Removes entries from the banlist.")
+					.setPermission("minecraft.command.pardon")
+					.setUsage(usage)
+					.addExample("/pardon MonroeTT");
 
 			writeJson(gson, help);
 
@@ -157,7 +181,10 @@ public class CommandHelp {
 			Usage usage = new Usage()
 					.addArgument(new Argument("<address>", "Specifies the IP address to remove from the banlist. Must be a valid IP address."));
 			
-			Help help = new Help("pardon-ip", "pardon-ip", "Removes entries from the banlist.").setPermission("minecraft.command.pardon").addUsage(usage).addExample("/pardon-ip 64.94.205.56");
+			Help help = new Help("pardon-ip", "pardon-ip", "Removes entries from the banlist.")
+					.setPermission("minecraft.command.pardon")
+					.setUsage(usage)
+					.addExample("/pardon-ip 64.94.205.56");
 
 			writeJson(gson, help);
 
@@ -168,7 +195,10 @@ public class CommandHelp {
 			Usage usage = new Usage()
 					.addArgument(new Argument("<message …>"));
 			
-			Help help = new Help("say", "say", "Sends a message in the chat to other players.").setPermission("minecraft.command.say").addUsage(usage).addExample("/say Hello world!");
+			Help help = new Help("say", "say", "Sends a message in the chat to other players.")
+					.setPermission("minecraft.command.say")
+					.setUsage(usage)
+					.addExample("/say Hello world!");
 			
 			writeJson(gson, help);
 			
@@ -180,7 +210,10 @@ public class CommandHelp {
 					.addArgument(new Argument("<clear|rain|thunder>", "clear: Set the weather to clear, rain: Set the weather to rain (or snow in cold biomes), thunder: Set the weather to a thunderstorm (or a thunder snowstorm in cold biomes)"))
 					.addArgument(new Argument("[duration]", "Specifies the time in seconds for the specified weather to last. Must be between 1 and 1,000,000 (inclusive, without the commas). If duration is omitted, the duration will be set between 6,000 and 18,000 ticks."));
 			
-			Help help = new Help("weather", "weather", "Sets the weather.").setPermission("minecraft.command.weather").addUsage(usage).addExample("/weather clear 9000");
+			Help help = new Help("weather", "weather", "Sets the weather.")
+					.setPermission("minecraft.command.weather")
+					.setUsage(usage)
+					.addExample("/weather clear 9000");
 
 			writeJson(gson, help);
 
@@ -194,7 +227,10 @@ public class CommandHelp {
 					.addArgument(new Argument("[<y-rot>", "Specifies the horizontal rotation (-180.0 for due north, -90.0 for due east, 0.0 for due south, 90.0 for due west, to 179.9 for just west of due north, before wrapping back around to -180.0). Tilde notation can be used to specify a rotation relative to the target's previous rotation."))
 					.addArgument(new Argument("<x-rot>]", "Specifies the vertical rotation (-90.0 for straight up to 90.0 for straight down). Tilde notation can be used to specify a rotation relative to the target's previous rotation."));
 			
-			Help help = new Help("teleport", "teleport", "Teleports entities (players, mobs, items, etc.).").setPermission("minecraft.command.teleport").addUsage(usage).addExample("/teleport MonroeTT -150 76 456");
+			Help help = new Help("teleport", "teleport", "Teleports entities (players, mobs, items, etc.).")
+					.setPermission("minecraft.command.teleport")
+					.setUsage(usage)
+					.addExample("/teleport MonroeTT -150 76 456");
 
 			writeJson(gson, help);
 
