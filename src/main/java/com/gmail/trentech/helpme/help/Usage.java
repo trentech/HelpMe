@@ -7,8 +7,8 @@ public class Usage {
 
 	private List<Argument> arguments = new ArrayList<>();
 	
-	public Usage() {
-		
+	public Usage(Argument argument) {
+		arguments.add(argument);
 	}
 	
 	public Usage addArgument(Argument argument) {
