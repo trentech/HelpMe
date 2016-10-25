@@ -23,6 +23,8 @@ import com.google.gson.JsonSyntaxException;
 public class CommandHelp {
 
 	public static void init() {
+		new File(Main.instance().getPath().toFile(), "commands").mkdirs();
+		
 		Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
 
 		try (Stream<Path> paths = Files.walk(Main.instance().getPath())) {

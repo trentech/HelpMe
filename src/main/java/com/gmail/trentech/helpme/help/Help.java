@@ -15,6 +15,7 @@ import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColor;
 
 import com.gmail.trentech.helpme.utils.ConfigManager;
+import com.google.common.collect.Lists;
 
 import ninja.leaping.configurate.ConfigurationNode;
 
@@ -268,6 +269,13 @@ public class Help implements Comparable<Help> {
 	}
 
 	public static void register(Help help) {
+		for(Help h : Lists.newArrayList(list)) {
+			if(h.getRawCommand().equals(help.getRawCommand())) {
+				list.remove(h);
+				break;
+			}
+		}
+		
 		list.add(help);
 	}
 
