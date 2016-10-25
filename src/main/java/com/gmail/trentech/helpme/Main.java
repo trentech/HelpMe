@@ -22,6 +22,7 @@ import org.spongepowered.api.plugin.PluginContainer;
 import com.gmail.trentech.helpme.commands.CMDHelp;
 import com.gmail.trentech.helpme.help.Help;
 import com.gmail.trentech.helpme.utils.CommandHelp;
+import com.gmail.trentech.helpme.utils.ConfigManager;
 import com.gmail.trentech.helpme.utils.Resource;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
@@ -60,6 +61,7 @@ public class Main {
 
 	@Listener
 	public void onInitialization(GameInitializationEvent event) {
+		ConfigManager.init();
 		CommandHelp.init();
 
 		Sponge.getEventManager().registerListeners(this, new EventListener());

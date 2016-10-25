@@ -254,7 +254,7 @@ public class CommandHelp {
 	
 
 	private static void writeJson(Gson gson, Help help) {
-		File file = new File(Main.instance().getPath().toFile(), help.getRawCommand() + ".json");
+		File file = new File(Main.instance().getPath().toFile(), "commands/" + help.getRawCommand() + ".json");
 		
 		if(!file.exists()) {
 			try (Writer writer = new FileWriter(file)) {

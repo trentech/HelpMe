@@ -5,12 +5,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+import org.spongepowered.api.Sponge;
 import org.spongepowered.api.command.CommandSource;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
-import org.spongepowered.api.text.format.TextColors;
+import org.spongepowered.api.text.format.TextColor;
+
+import com.gmail.trentech.helpme.utils.ConfigManager;
+
+import ninja.leaping.configurate.ConfigurationNode;
 
 public class Help implements Comparable<Help> {
 
@@ -79,16 +84,41 @@ public class Help implements Comparable<Help> {
 	}
 
 	public void execute(CommandSource src) {
+		ConfigurationNode config = ConfigManager.get().getConfig();
+		
+		TextColor headersColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "headers").getString()).get();
+		TextColor contentColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "content").getString()).get();
+		
 		List<Text> list = new ArrayList<>();
 
-		list.add(Text.of(TextColors.GREEN, "Description:"));
-		list.add(Text.of(TextColors.WHITE, " ", getDescription()));
+		list.add(Text.of(headersColor, "Description:"));
+		
+		StringBuilder sb = new StringBuilder(" " + getDescription());
+
+		if(sb.indexOf(" ", 50) == -1) {
+			list.add(Text.of(contentColor, " ", sb.toString()));
+		} else {
+			int i = 0;
+			while ((i = sb.indexOf(" ", i + 50)) != -1) {
+				list.add(Text.of(contentColor, sb.substring(0, i)));
+			    
+			    sb.delete(0, i);
+			    
+			    i = 0;
+			}
+			
+			list.add(Text.of(contentColor, sb.toString()));
+		}
 
 		Optional<String> permission = getPermission();
 		
 		if (permission.isPresent()) {
-			list.add(Text.of(TextColors.GREEN, "Permission:"));
-			list.add(Text.of(TextColors.WHITE, " ", permission.get()));
+			if(!src.hasPermission(permission.get())) {
+				return;
+			}
+			
+			list.add(Text.of(headersColor, "Permission:"));
+			list.add(Text.of(contentColor, " ", permission.get()));
 		}
 		
 		Optional<Usage> optionalUsage = getUsage();
@@ -96,7 +126,7 @@ public class Help implements Comparable<Help> {
 		if (optionalUsage.isPresent()) {
 			Usage usage = optionalUsage.get();
 			
-			list.add(Text.of(TextColors.GREEN, "Usage:"));
+			list.add(Text.of(headersColor, "Usage:"));
 			
 			Text command = Text.of(" /", getRawCommand());
 
@@ -104,34 +134,47 @@ public class Help implements Comparable<Help> {
 				Optional<String> description = argument.getDescription();
 
 				if(description.isPresent()) {
-					StringBuilder sb = new StringBuilder(description.get());
+					sb = new StringBuilder(description.get());
 
 					int i = 0;
 					while ((i = sb.indexOf(" ", i + 50)) != -1) {
 					    sb.replace(i, i + 1, "\n");
 					}
 
-					command = Text.join(command, Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
+					if(command.toPlain().length() > 45) {
+						list.add(Text.of(contentColor, command));
+						command = Text.join(Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
+					} else {
+						command = Text.join(command, Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
+					}
 				} else {
-					command = Text.join(command, Text.of(" "), Text.of(argument.getKey()));
+					if(command.toPlain().length() > 45) {
+						list.add(Text.of(contentColor, command));
+						command = Text.join(Text.of(" "), Text.of(argument.getKey()));
+					} else {
+						command = Text.join(command, Text.of(" "), Text.of(argument.getKey()));
+					}
 				}
 			}
 			
-			list.add(Text.of(TextColors.WHITE, command));
+			list.add(Text.of(contentColor, command));
 		}
+		
+		TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "pagination", "padding").getString()).get();
+		TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "pagination", "title").getString()).get();
 		
 		List<String> examples = getExamples();
 		
 		if (!examples.isEmpty()) {
-			list.add(Text.of(TextColors.GREEN, "Example:"));
+			list.add(Text.of(headersColor, "Example:"));
 			
 			for(String example : examples) {
-				list.add(Text.of(TextColors.WHITE, " ", example, TextColors.DARK_GREEN));
+				list.add(Text.of(contentColor, " ", example));
 			}		
 		}
 
 		PaginationList.builder()
-				.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, getCommand().toLowerCase())).build())
+				.title(Text.builder().color(paddingColor).append(Text.of(titleColor, getCommand().toLowerCase())).build())
 				.contents(list)
 				.sendTo(src);
 	}
@@ -143,6 +186,10 @@ public class Help implements Comparable<Help> {
 	}
 
 	public static void executeList(CommandSource src, List<Help> list) {
+		ConfigurationNode config = ConfigManager.get().getConfig();
+		
+		TextColor listColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "list").getString()).get();
+
 		List<Text> pages = new ArrayList<>();
 		
 		for (Help help : list) {
@@ -151,28 +198,33 @@ public class Help implements Comparable<Help> {
 			if(optionalPermission.isPresent()) {
 				if (src.hasPermission(optionalPermission.get())) {
 					if(!help.getChildren().isEmpty()) {
-						pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of("/" + help.getRawCommand())).build());
+						pages.add(Text.builder().color(listColor).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of("/" + help.getRawCommand())).build());
 					} else {
-						pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of("/" + help.getRawCommand())).build());
+						pages.add(Text.builder().color(listColor).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of("/" + help.getRawCommand())).build());
 					}	
 				}
 			} else {
 				if(!help.getChildren().isEmpty()) {
-					pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of("/" + help.getRawCommand())).build());
+					pages.add(Text.builder().color(listColor).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of("/" + help.getRawCommand())).build());
 				} else {
-					pages.add(Text.builder().color(TextColors.GREEN).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of("/" + help.getRawCommand())).build());
+					pages.add(Text.builder().color(listColor).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of("/" + help.getRawCommand())).build());
 				}
 			}
 		}
 		
-		if (src instanceof Player) {
-			PaginationList.builder()
-					.title(Text.builder().color(TextColors.DARK_GREEN).append(Text.of(TextColors.GREEN, "Command List")).build())
-					.contents(pages)
-					.sendTo(src);
-		} else {
-			for (Text text : pages) {
-				src.sendMessage(text);
+		if(!pages.isEmpty()) {		
+			TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "pagination", "padding").getString()).get();
+			TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "pagination", "title").getString()).get();
+			
+			if (src instanceof Player) {
+				PaginationList.builder()
+						.title(Text.builder().color(paddingColor).append(Text.of(titleColor, "Command List")).build())
+						.contents(pages)
+						.sendTo(src);
+			} else {
+				for (Text text : pages) {
+					src.sendMessage(text);
+				}
 			}
 		}
 	}
