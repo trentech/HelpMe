@@ -1,12 +1,8 @@
 package com.gmail.trentech.helpme;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.stream.Stream;
 
 import org.slf4j.Logger;
 import org.spongepowered.api.Sponge;
@@ -20,15 +16,9 @@ import org.spongepowered.api.plugin.Plugin;
 import org.spongepowered.api.plugin.PluginContainer;
 
 import com.gmail.trentech.helpme.commands.CMDHelp;
-import com.gmail.trentech.helpme.help.Help;
 import com.gmail.trentech.helpme.utils.CommandHelp;
 import com.gmail.trentech.helpme.utils.ConfigManager;
 import com.gmail.trentech.helpme.utils.Resource;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonIOException;
-import com.google.gson.JsonSyntaxException;
 import com.google.inject.Inject;
 
 import me.flibio.updatifier.Updatifier;
@@ -70,23 +60,8 @@ public class Main {
 	
 	@Listener
 	public void onReloadEvent(GameReloadEvent event) {
-		Gson gson = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().setFieldNamingPolicy(FieldNamingPolicy.IDENTITY).create();
-		
-		try (Stream<Path> paths = Files.walk(Main.instance().getPath())) {
-			paths.forEach(path -> {
-				File file = path.toFile();
-				
-				if(file.getName().endsWith(".json")) {
-					try {
-						Help.register(gson.fromJson(new FileReader(file), Help.class));
-					} catch (JsonSyntaxException | JsonIOException | FileNotFoundException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		ConfigManager.init();	
+		CommandHelp.init();
 	}
 	
 	public Logger getLog() {

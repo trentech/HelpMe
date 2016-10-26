@@ -170,7 +170,10 @@ public class Help implements Comparable<Help> {
 		TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "pagination", "padding", "color").getString()).get();
 		TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "pagination", "title", "color").getString()).get();
 
+		TextStyle paddingStyle = Help.getStyle(config.getNode("theme", "pagination", "padding", "style"));
 		TextStyle titleStyle = Help.getStyle(config.getNode("theme", "pagination", "title", "style"));
+		
+		Text paddingText = Text.of(config.getNode("theme", "pagination", "padding", "text").getString());
 		
 		List<String> examples = getExamples();
 
@@ -182,7 +185,7 @@ public class Help implements Comparable<Help> {
 			}
 		}
 
-		PaginationList.builder().title(Text.builder().color(paddingColor).append(Text.of(titleStyle, titleColor, getCommand().toLowerCase())).build()).contents(list).sendTo(src);
+		PaginationList.builder().padding(Text.builder().style(paddingStyle).append(paddingText).build()).title(Text.builder().color(paddingColor).append(Text.of(titleStyle, titleColor, getCommand().toLowerCase())).build()).contents(list).sendTo(src);
 	}
 
 	private static TextStyle getStyle(ConfigurationNode node) {
@@ -220,7 +223,8 @@ public class Help implements Comparable<Help> {
 		ConfigurationNode config = ConfigManager.get().getConfig();
 
 		TextColor listColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "list", "color").getString()).get();
-
+		TextStyle listStyle = Help.getStyle(config.getNode("theme", "list", "style"));
+		
 		List<Text> pages = new ArrayList<>();
 
 		for (Help help : array) {
@@ -229,16 +233,16 @@ public class Help implements Comparable<Help> {
 			if (optionalPermission.isPresent()) {
 				if (src.hasPermission(optionalPermission.get())) {
 					if (!help.getChildren().isEmpty()) {
-						pages.add(Text.builder().color(listColor).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of("/" + help.getRawCommand())).build());
+						pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of("/" + help.getRawCommand())).build());
 					} else {
-						pages.add(Text.builder().color(listColor).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of("/" + help.getRawCommand())).build());
+						pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of("/" + help.getRawCommand())).build());
 					}
 				}
 			} else {
 				if (!help.getChildren().isEmpty()) {
-					pages.add(Text.builder().color(listColor).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of("/" + help.getRawCommand())).build());
+					pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for list of sub commands "))).onClick(TextActions.executeCallback(Help.executeList(help.getChildren()))).append(Text.of("/" + help.getRawCommand())).build());
 				} else {
-					pages.add(Text.builder().color(listColor).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of("/" + help.getRawCommand())).build());
+					pages.add(Text.builder().color(listColor).style(listStyle).onHover(TextActions.showText(Text.of("Click command for more information "))).onClick(TextActions.executeCallback(help.execute())).append(Text.of("/" + help.getRawCommand())).build());
 				}
 			}
 		}
@@ -247,10 +251,13 @@ public class Help implements Comparable<Help> {
 			TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "pagination", "padding", "color").getString()).get();
 			TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "pagination", "title", "color").getString()).get();
 
+			TextStyle paddingStyle = Help.getStyle(config.getNode("theme", "pagination", "padding", "style"));
 			TextStyle titleStyle = Help.getStyle(config.getNode("theme", "pagination", "title", "style"));
 			
+			Text paddingText = Text.of(config.getNode("theme", "pagination", "padding", "text").getString());
+			
 			if (src instanceof Player) {
-				PaginationList.builder().title(Text.builder().color(paddingColor).append(Text.of(titleStyle, titleColor, "Command List")).build()).contents(pages).sendTo(src);
+				PaginationList.builder().padding(Text.builder().style(paddingStyle).append(paddingText).build()).title(Text.builder().color(paddingColor).append(Text.of(titleStyle, titleColor, "Command List")).build()).contents(pages).sendTo(src);
 			} else {
 				for (Text text : pages) {
 					src.sendMessage(text);

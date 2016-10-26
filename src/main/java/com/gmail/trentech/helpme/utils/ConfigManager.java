@@ -54,23 +54,25 @@ public class ConfigManager {
 		
 		if (configName.equalsIgnoreCase("config")) {
 			if (config.getNode("theme", "pagination", "title").isVirtual()) {
-				config.getNode("theme", "pagination", "title", "color").setValue(TextColors.GREEN.getName());
-				config.getNode("theme", "pagination", "title", "style").setValue("NONE").setComment("Comma seperated list of styles. 'BOLD,ITALIC,UNDERLINE,STRIKETHOUGH,OBFUSCATED'");
+				config.getNode("theme", "pagination", "title", "color").setValue(TextColors.GREEN.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");
+				config.getNode("theme", "pagination", "title", "style").setValue("UNDERLINE").setComment("One or more(Comma seperated) of the following: BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED");
 			}
 			if (config.getNode("theme", "pagination", "padding").isVirtual()) {
-				config.getNode("theme", "pagination", "padding", "color").setValue(TextColors.DARK_GREEN.getName());
+				config.getNode("theme", "pagination", "padding", "color").setValue(TextColors.DARK_GREEN.getName()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");;
+				config.getNode("theme", "pagination", "padding", "style").setValue("STRIKETHROUGH,BOLD").setComment("One or more(Comma seperated) of the following: BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED");
+				config.getNode("theme", "pagination", "padding", "text").setValue("=").setComment("Characters the padding will be made of");
 			}
 			if (config.getNode("theme", "list").isVirtual()) {
-				config.getNode("theme", "list", "color").setValue(TextColors.GREEN.getName());
-				config.getNode("theme", "list", "style").setValue("NONE").setComment("Comma seperated list of styles. 'BOLD,ITALIC,UNDERLINE,STRIKETHOUGH,OBFUSCATED'");;
+				config.getNode("theme", "list", "color").setValue(TextColors.GREEN.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");;
+				config.getNode("theme", "list", "style").setValue("ITALIC").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");;
 			}
 			if (config.getNode("theme", "content").isVirtual()) {
-				config.getNode("theme", "content", "color").setValue(TextColors.WHITE.getName());
-				config.getNode("theme", "content", "style").setValue("NONE").setComment("Comma seperated list of styles. 'BOLD,ITALIC,UNDERLINE,STRIKETHOUGH,OBFUSCATED'");;
+				config.getNode("theme", "content", "color").setValue(TextColors.WHITE.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");;
+				config.getNode("theme", "content", "style").setValue("NONE").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");;
 			}
 			if (config.getNode("theme", "headers").isVirtual()) {
-				config.getNode("theme", "headers", "color").setValue(TextColors.GREEN.getName());
-				config.getNode("theme", "headers", "style").setValue("BOLD,UNDERLINE").setComment("Comma seperated list of styles. 'BOLD,ITALIC,UNDERLINE,STRIKETHOUGH,OBFUSCATED'");;
+				config.getNode("theme", "headers", "color").setValue(TextColors.GREEN.getName().toUpperCase()).setComment("One of the following: AQUA,BLACK,BLUE,DARK_AQUA,DARK_BLUE,DARK_GRAY,DARK_GREEN,DARK_PURPLE,DARK_RED,GOLD,GRAY,GREEN,LIGHT_PURPLE,RED,WHITE,YELLOW");;
+				config.getNode("theme", "headers", "style").setValue("BOLD").setComment("One or more(Comma seperated) of the following: 'BOLD,ITALIC,UNDERLINE,STRIKETHROUGH,OBFUSCATED'");;
 			}
 		}
 		
