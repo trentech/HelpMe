@@ -184,7 +184,7 @@ public class Help implements Comparable<Help> {
 				list.add(Text.of(contentStyle, contentColor, " ", example));
 			}
 		}
-
+		
 		PaginationList.builder().padding(Text.builder().style(paddingStyle).append(paddingText).build()).title(Text.builder().color(paddingColor).append(Text.of(titleStyle, titleColor, getCommand().toLowerCase())).build()).contents(list).sendTo(src);
 	}
 
@@ -257,6 +257,11 @@ public class Help implements Comparable<Help> {
 			Text paddingText = Text.of(config.getNode("theme", "pagination", "padding", "text").getString());
 			
 			if (src instanceof Player) {
+				if ((pages.size() > 18) && (pages.size() % 18 != 0)) {
+					while(pages.size() % 18 != 0) {
+						pages.add(Text.of(" "));
+					}
+				}
 				PaginationList.builder().padding(Text.builder().style(paddingStyle).append(paddingText).build()).title(Text.builder().color(paddingColor).append(Text.of(titleStyle, titleColor, "Command List")).build()).contents(pages).sendTo(src);
 			} else {
 				for (Text text : pages) {
