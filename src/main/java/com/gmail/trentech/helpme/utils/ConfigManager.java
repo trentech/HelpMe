@@ -53,20 +53,24 @@ public class ConfigManager {
 		CommentedConfigurationNode config = configManager.getConfig();
 		
 		if (configName.equalsIgnoreCase("config")) {
-			if (config.getNode("colors", "pagination", "title").isVirtual()) {
-				config.getNode("colors", "pagination", "title").setValue(TextColors.GREEN.getName());
+			if (config.getNode("theme", "pagination", "title").isVirtual()) {
+				config.getNode("theme", "pagination", "title", "color").setValue(TextColors.GREEN.getName());
+				config.getNode("theme", "pagination", "title", "style").setValue("NONE").setComment("Comma seperated list of styles. 'BOLD,ITALIC,UNDERLINE,STRIKETHOUGH,OBFUSCATED'");
 			}
-			if (config.getNode("colors", "pagination", "padding").isVirtual()) {
-				config.getNode("colors", "pagination", "padding").setValue(TextColors.DARK_GREEN.getName());
+			if (config.getNode("theme", "pagination", "padding").isVirtual()) {
+				config.getNode("theme", "pagination", "padding", "color").setValue(TextColors.DARK_GREEN.getName());
 			}
-			if (config.getNode("colors", "list").isVirtual()) {
-				config.getNode("colors", "list").setValue(TextColors.GREEN.getName());
+			if (config.getNode("theme", "list").isVirtual()) {
+				config.getNode("theme", "list", "color").setValue(TextColors.GREEN.getName());
+				config.getNode("theme", "list", "style").setValue("NONE").setComment("Comma seperated list of styles. 'BOLD,ITALIC,UNDERLINE,STRIKETHOUGH,OBFUSCATED'");;
 			}
-			if (config.getNode("colors", "content").isVirtual()) {
-				config.getNode("colors", "content").setValue(TextColors.WHITE.getName());
+			if (config.getNode("theme", "content").isVirtual()) {
+				config.getNode("theme", "content", "color").setValue(TextColors.WHITE.getName());
+				config.getNode("theme", "content", "style").setValue("NONE").setComment("Comma seperated list of styles. 'BOLD,ITALIC,UNDERLINE,STRIKETHOUGH,OBFUSCATED'");;
 			}
-			if (config.getNode("colors", "headers").isVirtual()) {
-				config.getNode("colors", "headers").setValue(TextColors.GREEN.getName());
+			if (config.getNode("theme", "headers").isVirtual()) {
+				config.getNode("theme", "headers", "color").setValue(TextColors.GREEN.getName());
+				config.getNode("theme", "headers", "style").setValue("BOLD,UNDERLINE").setComment("Comma seperated list of styles. 'BOLD,ITALIC,UNDERLINE,STRIKETHOUGH,OBFUSCATED'");;
 			}
 		}
 		

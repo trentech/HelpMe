@@ -13,6 +13,8 @@ import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColor;
+import org.spongepowered.api.text.format.TextStyle;
+import org.spongepowered.api.text.format.TextStyles;
 
 import com.gmail.trentech.helpme.utils.ConfigManager;
 import com.google.common.collect.Lists;
@@ -88,28 +90,31 @@ public class Help implements Comparable<Help> {
 	public void execute(CommandSource src) {
 		ConfigurationNode config = ConfigManager.get().getConfig();
 
-		TextColor headersColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "headers").getString()).get();
-		TextColor contentColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "content").getString()).get();
-
+		TextColor headersColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "headers", "color").getString()).get();	
+		TextColor contentColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "content", "color").getString()).get();
+		
+		TextStyle headersStyle = Help.getStyle(config.getNode("theme", "headers", "style"));
+		TextStyle contentStyle = Help.getStyle(config.getNode("theme", "content", "style"));
+		
 		List<Text> list = new ArrayList<>();
 
-		list.add(Text.of(headersColor, "Description:"));
+		list.add(Text.of(headersStyle, headersColor, "Description:"));
 
 		StringBuilder sb = new StringBuilder(" " + getDescription());
 
 		if (sb.indexOf(" ", 50) == -1) {
-			list.add(Text.of(contentColor, sb.toString()));
+			list.add(Text.of(contentStyle, contentColor, sb.toString()));
 		} else {
 			int i = 0;
 			while ((i = sb.indexOf(" ", i + 50)) != -1) {
-				list.add(Text.of(contentColor, sb.substring(0, i)));
+				list.add(Text.of(contentStyle, contentColor, sb.substring(0, i)));
 
 				sb.delete(0, i);
 
 				i = 0;
 			}
 
-			list.add(Text.of(contentColor, sb.toString()));
+			list.add(Text.of(contentStyle, contentColor, sb.toString()));
 		}
 
 		Optional<String> permission = getPermission();
@@ -119,8 +124,8 @@ public class Help implements Comparable<Help> {
 				return;
 			}
 
-			list.add(Text.of(headersColor, "Permission:"));
-			list.add(Text.of(contentColor, " ", permission.get()));
+			list.add(Text.of(headersStyle, headersColor, "Permission:"));
+			list.add(Text.of(contentStyle, contentColor, " ", permission.get()));
 		}
 
 		Optional<Usage> optionalUsage = getUsage();
@@ -128,7 +133,7 @@ public class Help implements Comparable<Help> {
 		if (optionalUsage.isPresent()) {
 			Usage usage = optionalUsage.get();
 
-			list.add(Text.of(headersColor, "Usage:"));
+			list.add(Text.of(headersStyle, headersColor, "Usage:"));
 
 			Text command = Text.of(" /", getRawCommand());
 
@@ -144,14 +149,14 @@ public class Help implements Comparable<Help> {
 					}
 
 					if (command.toPlain().length() > 45) {
-						list.add(Text.of(contentColor, command));
+						list.add(Text.of(contentStyle, contentColor, command));
 						command = Text.join(Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
 					} else {
 						command = Text.join(command, Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
 					}
 				} else {
 					if (command.toPlain().length() > 45) {
-						list.add(Text.of(contentColor, command));
+						list.add(Text.of(contentStyle, contentColor, command));
 						command = Text.join(Text.of(" "), Text.of(argument.getKey()));
 					} else {
 						command = Text.join(command, Text.of(" "), Text.of(argument.getKey()));
@@ -159,25 +164,48 @@ public class Help implements Comparable<Help> {
 				}
 			}
 
-			list.add(Text.of(contentColor, command));
+			list.add(Text.of(contentStyle, contentColor, command));
 		}
 
-		TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "pagination", "padding").getString()).get();
-		TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "pagination", "title").getString()).get();
+		TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "pagination", "padding", "color").getString()).get();
+		TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "pagination", "title", "color").getString()).get();
 
+		TextStyle titleStyle = Help.getStyle(config.getNode("theme", "pagination", "title", "style"));
+		
 		List<String> examples = getExamples();
 
 		if (!examples.isEmpty()) {
-			list.add(Text.of(headersColor, "Example:"));
+			list.add(Text.of(headersStyle, headersColor, "Example:"));
 
 			for (String example : examples) {
-				list.add(Text.of(contentColor, " ", example));
+				list.add(Text.of(contentStyle, contentColor, " ", example));
 			}
 		}
 
-		PaginationList.builder().title(Text.builder().color(paddingColor).append(Text.of(titleColor, getCommand().toLowerCase())).build()).contents(list).sendTo(src);
+		PaginationList.builder().title(Text.builder().color(paddingColor).append(Text.of(titleStyle, titleColor, getCommand().toLowerCase())).build()).contents(list).sendTo(src);
 	}
 
+	private static TextStyle getStyle(ConfigurationNode node) {
+		TextStyle style = TextStyles.NONE;
+		
+		String[] styles = node.getString().split(",");
+		
+		for(int i = 0; i < styles.length; i++) {
+			if(styles[i].equalsIgnoreCase("BOLD")) {
+				style = style.and(TextStyles.BOLD);
+			} else if(styles[i].equalsIgnoreCase("ITALIC")) {
+				style = style.and(TextStyles.ITALIC);
+			} else if(styles[i].equalsIgnoreCase("OBFUSCATED")) {
+				style = style.and(TextStyles.OBFUSCATED);
+			} else if(styles[i].equalsIgnoreCase("UNDERLINE")) {
+				style = style.and(TextStyles.UNDERLINE);
+			} else if(styles[i].equalsIgnoreCase("STRIKETHROUGH")) {
+				style = style.and(TextStyles.STRIKETHROUGH);
+			}
+		}
+		
+		return style;
+	}
 	public Consumer<CommandSource> execute() {
 		return (CommandSource src) -> {
 			execute(src);
@@ -191,7 +219,7 @@ public class Help implements Comparable<Help> {
 
 		ConfigurationNode config = ConfigManager.get().getConfig();
 
-		TextColor listColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "list").getString()).get();
+		TextColor listColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "list", "color").getString()).get();
 
 		List<Text> pages = new ArrayList<>();
 
@@ -216,11 +244,13 @@ public class Help implements Comparable<Help> {
 		}
 
 		if (!pages.isEmpty()) {
-			TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "pagination", "padding").getString()).get();
-			TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("colors", "pagination", "title").getString()).get();
+			TextColor paddingColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "pagination", "padding", "color").getString()).get();
+			TextColor titleColor = Sponge.getRegistry().getType(TextColor.class, config.getNode("theme", "pagination", "title", "color").getString()).get();
 
+			TextStyle titleStyle = Help.getStyle(config.getNode("theme", "pagination", "title", "style"));
+			
 			if (src instanceof Player) {
-				PaginationList.builder().title(Text.builder().color(paddingColor).append(Text.of(titleColor, "Command List")).build()).contents(pages).sendTo(src);
+				PaginationList.builder().title(Text.builder().color(paddingColor).append(Text.of(titleStyle, titleColor, "Command List")).build()).contents(pages).sendTo(src);
 			} else {
 				for (Text text : pages) {
 					src.sendMessage(text);

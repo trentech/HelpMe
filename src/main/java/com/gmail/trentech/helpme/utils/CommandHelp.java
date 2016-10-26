@@ -73,6 +73,39 @@ public class CommandHelp {
 			Help.register(help);
 		}
 
+		if (!Help.get("effect").isPresent()) {
+			Usage usage = new Usage(Argument.of("<player>", "Specifies the targetted player"))
+					.addArgument(Argument.of("<effect>", "Specifies the effect to grant. Must be a status effect id (for example, 1 or minecraft:speed). Set to 'clear' to remove all effects"))
+					.addArgument(Argument.of("[seconds]", "Specifies the effect's duration in seconds. Must be between 0 and 1,000,000 (inclusive, without the comas). If not specified, defaults to 30 seconds."))
+					.addArgument(Argument.of("[amplifier]", "Specifies the number of additional levels to add to the effect. Must be between 0 and 255 (inclusive). If not specified, defaults to 0. "
+							+ "Note that the first tier of a status effect (e.g. Regeneration I) is 0, so the second tier, for example Regeneration II, would be specified by an amplifier level of 1."))
+					.addArgument(Argument.of("[hideParticles]", "Specifies whether the particles of the status effect should be hidden. Must be either true or false. If not specified, defaults to false"));
+
+			Help help = new Help("effect", "effect", "The effect command manages status effects on players and other entities.")
+					.setPermission("minecraft.command.effect")
+					.setUsage(usage)
+					.addExample("/effect MonroeTT minecraft:speed 60");
+
+			writeJson(gson, help);
+
+			Help.register(help);
+		}
+		
+		if (!Help.get("enchant").isPresent()) {
+			Usage usage = new Usage(Argument.of("<player>", "Specifies the targetted player"))
+					.addArgument(Argument.of("<enchantment ID>", "Specifies the enchantment to be added to the item held by the target. Must be a valid enchantment ID (for example, 16 or minecraft:sharpness)."))
+					.addArgument(Argument.of("[level]", "Specifies the enchantment level. Must be at least 1 and not greater than the maximum level for the specified enchantment. If not specified, defaults to 1."));
+
+			Help help = new Help("enchant", "enchant", "Adds an enchantment to a player's selected item, subject to the same restrictions as an anvil.")
+					.setPermission("minecraft.command.enchant")
+					.setUsage(usage)
+					.addExample("/enchant MonroeTT minecraft:speed 60");
+
+			writeJson(gson, help);
+
+			Help.register(help);
+		}
+		
 		if (!Help.get("gamemode").isPresent()) {
 			Usage usage = new Usage(Argument.of("<mode>", "Must be one of the following: survival(0), creative(1), adventure(2), spectator(3)"))
 					.addArgument(Argument.of("[player]", "If specified, must be either a player's username or a target selector. If unspecified, defaults to the player using the command."));
@@ -157,6 +190,30 @@ public class CommandHelp {
 			Help.register(help);
 		}
 
+		if (!Help.get("particle").isPresent()) {
+			Usage usage = new Usage(Argument.of("<name>", "Specifies the particle to create. Must be a particle name (for example, explode)."))
+					.addArgument(Argument.of("<x> <y> <z>", "Specifies the position at which to create the particle. All values (including y) must be between -30,000,000 and 30,000,000"
+							+ " (inclusive, without the commas). May use tilde notation to specify a position relative to the command's execution."))
+					.addArgument(Argument.of("<xd> <yd> <zd>", "Specifies the size of the 3-dimensional cuboid volume to spawn particles in, centered on position x y z, and divided "
+							+ "by about 8 (using 1 1 1 specifies a cuboid of about 8×8×8 in size)."))
+					.addArgument(Argument.of("<speed>", "Specifies the speed of the particle. Must be at least 0."))
+					.addArgument(Argument.of("[count]", "Specifies the number of particle effects to create. Must be at least 0 (which produces one particle)."))
+					.addArgument(Argument.of("[mode]", "Specifies the display mode. May be anything but only force will have an effect: to allow the particle(s) to be seen up to "
+							+ "256 blocks away and by players that use the minimal particles setting."))
+					.addArgument(Argument.of("[player]", "Allows control of which player should view this particle instead of everyone in the viewing range of the particle."))
+					.addArgument(Argument.of("[params ...]", "Allows blockdust, iconcrack, blockcrack and fallingdust to be modified to view a specific item or block. Two parameters "
+							+ "are accepted for iconcrack."));
+
+			Help help = new Help("particle", "particle", "Creates particles.")
+					.setPermission("minecraft.command.particle")
+					.setUsage(usage)
+					.addExample("/particle explode 150 75 -643 0 0 0 0 MonroeTT");
+
+			writeJson(gson, help);
+
+			Help.register(help);
+		}
+		
 		if (!Help.get("pardon").isPresent()) {
 			Usage usage = new Usage(Argument.of("<name>", "Specifies the name to remove from the banlist."));
 
@@ -183,8 +240,36 @@ public class CommandHelp {
 			Help.register(help);
 		}
 		
+		if (!Help.get("playsound").isPresent()) {
+			Usage usage = new Usage(Argument.of("<sound>", "Specifies the sound to play. Must be a sound event defined in sounds.json (for example, mob.pig.say)."))
+					.addArgument(Argument.of("<source>", "Specifies which category in the music & sound options the sound falls under. Must be master, music, record, weather, block, hostile, neutral, player, ambient, or voice."))
+					.addArgument(Argument.of("<player>", "Specifies the sound's target. Must be a player name or a target selector."))
+					.addArgument(Argument.of("[x] [y] [z]", "Specifies the position to play the sounds from. May use tilde notation to specify a position relative to the target(s)."))
+					.addArgument(Argument.of("[volume]", "Specifies the distance that the sound can be heard. Must be at least 0.0. For values less than 1.0, the sound will be quieter and have"
+							+ " a smaller sphere within which it may be heard. For values greater than 1.0, the sound will not actually grow louder, but its audible range (a 16-block radius at 1.0)"
+							+ " will be multiplied by volume. There will always be a gradual falloff to silence based on distance from the center of the sphere."))
+					.addArgument(Argument.of("[pitch] ", "Specifies the pitch of the sound. Must be between 0.0 and 2.0 (inclusive), and values less than 0.5 are equivalent to 0.5. "
+							+ "Values lower than 1.0 lower the pitch and increase the duration; values greater than 1.0 raise the pitch and reduce the duration. The pitch value is a multiplier "
+							+ "applied to the frequency, so if a value between 0.5 and 1.0 (inclusive) is doubled, the pitch will be an octave higher. (If you're a musician wishing to convert other "
+							+ "intervals to pitch values, see Note block#Usage, but be aware that 1.0 won't be F♯ for all sound effects.) If not specified, defaults to 1.0."))
+					
+					.addArgument(Argument.of("[minimumVolume]", "Specifies the volume for targets outside the sound's normal audible sphere. If a target is outside the normal sphere, the "
+							+ "sound will instead be centered some short distance from the target (less than four blocks away), and minimumVolume will determine its volume. "
+							+ "Must be between 0.0 and 1.0 (inclusive)."));
+
+			Help help = new Help("playsound", "playsound", "Plays a sound.")
+					.setPermission("minecraft.command.playsound")
+					.setUsage(usage)
+					.addExample("/playsound mob.pig.say master MonroeTT");
+
+			writeJson(gson, help);
+
+			
+			Help.register(help);
+		}
+		
 		if(!Help.get("say").isPresent()) {
-			Usage usage = new Usage(Argument.of("<message �>"));
+			Usage usage = new Usage(Argument.of("<message …>"));
 
 			Help help = new Help("say", "say", "Sends a message in the chat to other players.")
 					.setPermission("minecraft.command.say")
@@ -251,6 +336,125 @@ public class CommandHelp {
 			writeJson(gson, sponge);
 			
 			Help.register(sponge);
+		}
+		
+		if (!Help.get("scoreboard").isPresent()) {
+
+			Help scoreObjList = new Help("scoreboard objectives list", "list", "Lists all existing objectives, with their display name and criteria")
+					.setPermission("minecraft.command.scoreboard");
+			
+			Usage usageScoreObjAdd = new Usage(Argument.of("<name>"))
+					.addArgument(Argument.of("<criteria>"))
+					.addArgument(Argument.of("[display name...]"));
+			
+			Help scoreObjAdd = new Help("scoreboard objectives add", "add", "Creates a new objective with the internal name name, specified criteria, and the optional display name. Without a specified display name, it will default to name. See above section for the meaning of these properties. All arguments are case-sensitive.")
+					.setUsage(usageScoreObjAdd)
+					.setPermission("minecraft.command.scoreboard");
+			
+			Usage usageScoreObjRemove = new Usage(Argument.of("<name>"));
+			
+			Help scoreObjRemove = new Help("scoreboard objectives remove", "remove", "Deletes all references to the objective with name in the scoreboard system. Data is deleted from the objectives list, player scores, and if it was on a display list, it will no longer be displayed.")
+					.setUsage(usageScoreObjRemove)
+					.setPermission("minecraft.command.scoreboard");
+			
+			Usage usageScoreObjDisplay = new Usage(Argument.of("<slot>"))
+					.addArgument(Argument.of("[objective]"));
+			
+			Help scoreObjDisplay = new Help("scoreboard objectives setdisplay", "setdisplay", "Displays score info for objective in the specified slot. Valid slots are listed and described in Display Slots. Note that the objective parameter is optional: if no objective is provided, this display slot is cleared (returned to its default state).")
+					.setUsage(usageScoreObjDisplay)
+					.setPermission("minecraft.command.scoreboard");
+			
+			Help scoreObj = new Help("scoreboard objectives", "objectives", "Objectives sub command")
+					.setPermission("minecraft.command.scoreboard")
+					.addChild(scoreObjDisplay)
+					.addChild(scoreObjRemove)
+					.addChild(scoreObjAdd)
+					.addChild(scoreObjList);
+			
+			Usage usageScorePlayerOperation = new Usage(Argument.of("<targetName>"))
+					.addArgument(Argument.of("<targetObjective>"))
+					.addArgument(Argument.of("<operation>"))
+					.addArgument(Argument.of("<selector>"))
+					.addArgument(Argument.of("<objective>"));
+			
+			Help scorePlayerOperation = new Help("scoreboard players operation", "operation", "Applies an arithmetic operation altering targetName's score in targetObjective, using selector's score in objective as input.")
+					.setPermission("minecraft.command.scoreboard")
+					.setUsage(usageScorePlayerOperation);
+			
+			Usage usageScorePlayerTest = new Usage(Argument.of("<player>"))
+					.addArgument(Argument.of("<objective>"))
+					.addArgument(Argument.of("<min>"))
+					.addArgument(Argument.of("[max]"));
+			
+			Help scorePlayerTest = new Help("scoreboard players test", "test", "Outputs whether or not player's score in objective is within the range min to max (inclusive). If not specified or if '*' is used, max defaults to 2,147,483,647. Using a '*' for min means -2,147,483,648. '*' may be used to represent all players tracked by the scoreboard.")
+					.setPermission("minecraft.command.scoreboard")
+					.setUsage(usageScorePlayerTest);
+			
+			Usage usageScorePlayerEnable = new Usage(Argument.of("<player>"))
+					.addArgument(Argument.of("<trigger>"));
+			
+			Help scorePlayerEnable = new Help("scoreboard players enable", "enable", "Enables player to use the /trigger command on the specified trigger objective. Until this has been done, player's attempts to /trigger that objective will fail. Once they have used the /trigger command on it, it will be disabled again. '*' may be used to represent all players tracked by the scoreboard.")
+					.setPermission("minecraft.command.scoreboard")
+					.setUsage(usageScorePlayerEnable);
+			
+			Usage usageScorePlayerReset = new Usage(Argument.of("<player>"))
+					.addArgument(Argument.of("<objective>"));
+			
+			Help scorePlayerReset = new Help("scoreboard players reset", "reset", "Deletes score or all scores for player. If objective is specified, only that objective is cleared; otherwise this applies to all objectives. Note this does not merely set the score(s) to 0: it removes the player from the scoreboard altogether (or for the given objective). '*' may be used to represent all players tracked by the scoreboard.")
+					.setPermission("minecraft.command.scoreboard")
+					.setUsage(usageScorePlayerReset);
+			
+			Usage usageScorePlayerRemove = new Usage(Argument.of("<player>"))
+					.addArgument(Argument.of("<objective>"))
+					.addArgument(Argument.of("<count>"))
+					.addArgument(Argument.of("[dataTag]"));
+			
+			Help scorePlayerRemove = new Help("scoreboard players remove", "remove", "Decrements the player's score in objective by count. '*' may be used to represent all players tracked by the scoreboard.")
+					.setPermission("minecraft.command.scoreboard")
+					.setUsage(usageScorePlayerRemove);
+
+			Help scorePlayerAdd = new Help("scoreboard players add", "add", "Increments the player's score in objective by count. '*' may be used to represent all players tracked by the scoreboard.")
+					.setPermission("minecraft.command.scoreboard")
+					.setUsage(usageScorePlayerRemove);
+			
+			Usage usageScorePlayerSet = new Usage(Argument.of("<player>"))
+					.addArgument(Argument.of("<objective>"))
+					.addArgument(Argument.of("<score>"))
+					.addArgument(Argument.of("[dataTag]"));
+			
+			Help scorePlayerSet = new Help("scoreboard players set", "set", "Sets the player's score in objective to score, overwriting the previous score if it exists. '*' may be used in place of player to represent every player tracked by the scoreboard.")
+					.setPermission("minecraft.command.scoreboard")
+					.setUsage(usageScorePlayerSet);
+			
+			Usage usageScorePlayerList = new Usage(Argument.of("[playername]"));
+			
+			Help scorePlayerList = new Help("scoreboard players list", "list", "Displays all players who are tracked, in some way, by the scoreboard system. The optional playername parameter can be used to display all scores of a particular player, and '*' (an asterisk) in place of playername will display all scores for all players tracked by the scoreboard system.")
+					.setPermission("minecraft.command.scoreboard")
+					.setUsage(usageScorePlayerList);
+			
+			Help scorePlayerTag = new Help("scoreboard players tag", "tag", "")
+					.setPermission("minecraft.command.scoreboard");
+			
+			Help scorePlayer = new Help("scoreboard players", "players", "Players sub command")
+					.setPermission("minecraft.command.scoreboard")
+					.addChild(scorePlayerList)
+					.addChild(scorePlayerSet)
+					.addChild(scorePlayerAdd)
+					.addChild(scorePlayerRemove)
+					.addChild(scorePlayerReset)
+					.addChild(scorePlayerEnable)
+					.addChild(scorePlayerTest)
+					.addChild(scorePlayerOperation)
+					.addChild(scorePlayerTag);
+
+			Help help = new Help("scoreboard", "scoreboard", "Scoreboard base comand.")
+					.setPermission("minecraft.command.scoreboard")
+					.addChild(scorePlayer)
+					.addChild(scoreObj);
+
+			writeJson(gson, help);
+
+			Help.register(help);
 		}
 	}
 	
