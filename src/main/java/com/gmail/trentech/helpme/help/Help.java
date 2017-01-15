@@ -88,15 +88,13 @@ public class Help implements Comparable<Help> {
 		return this;
 	}
 
-	public List<Text> getUsageText() {
-		List<Text> list = new ArrayList<>();
+	public Text getUsageText() {
+		Text command = Text.of("Usage: /", getRawCommand());
 		
 		Optional<Usage> optionalUsage = getUsage();
 
 		if (optionalUsage.isPresent()) {
 			Usage usage = optionalUsage.get();
-
-			Text command = Text.of(" /", getRawCommand());
 
 			for (Argument argument : usage.getArguments()) {
 				Optional<String> description = argument.getDescription();
@@ -109,26 +107,14 @@ public class Help implements Comparable<Help> {
 						sb.replace(i, i + 1, "\n");
 					}
 
-					if (command.toPlain().length() > 45) {
-						list.add(Text.of(TextColors.RED, command));
-						command = Text.join(Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
-					} else {
-						command = Text.join(command, Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
-					}
+					command = Text.join(command, Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
 				} else {
-					if (command.toPlain().length() > 45) {
-						list.add(Text.of(TextColors.RED, command));
-						command = Text.join(Text.of(" "), Text.of(argument.getKey()));
-					} else {
-						command = Text.join(command, Text.of(" "), Text.of(argument.getKey()));
-					}
+					command = Text.join(command, Text.of(" "), Text.of(argument.getKey()));
 				}
 			}
-
-			list.add(Text.of(TextColors.RED, command));
 		}
 		
-		return list;
+		return Text.of(TextColors.RED, command);
 	}
 	
 	public void execute(CommandSource src) {
