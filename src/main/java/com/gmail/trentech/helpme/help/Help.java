@@ -13,6 +13,7 @@ import org.spongepowered.api.service.pagination.PaginationList;
 import org.spongepowered.api.text.Text;
 import org.spongepowered.api.text.action.TextActions;
 import org.spongepowered.api.text.format.TextColor;
+import org.spongepowered.api.text.format.TextColors;
 import org.spongepowered.api.text.format.TextStyle;
 import org.spongepowered.api.text.format.TextStyles;
 
@@ -87,6 +88,49 @@ public class Help implements Comparable<Help> {
 		return this;
 	}
 
+	public List<Text> getUsageText() {
+		List<Text> list = new ArrayList<>();
+		
+		Optional<Usage> optionalUsage = getUsage();
+
+		if (optionalUsage.isPresent()) {
+			Usage usage = optionalUsage.get();
+
+			Text command = Text.of(" /", getRawCommand());
+
+			for (Argument argument : usage.getArguments()) {
+				Optional<String> description = argument.getDescription();
+
+				if (description.isPresent()) {
+					StringBuilder sb = new StringBuilder(description.get());
+
+					int i = 0;
+					while ((i = sb.indexOf(" ", i + 50)) != -1) {
+						sb.replace(i, i + 1, "\n");
+					}
+
+					if (command.toPlain().length() > 45) {
+						list.add(Text.of(TextColors.RED, command));
+						command = Text.join(Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
+					} else {
+						command = Text.join(command, Text.of(" "), Text.builder().onHover(TextActions.showText(Text.of(sb.toString()))).append(Text.of(argument.getKey())).build());
+					}
+				} else {
+					if (command.toPlain().length() > 45) {
+						list.add(Text.of(TextColors.RED, command));
+						command = Text.join(Text.of(" "), Text.of(argument.getKey()));
+					} else {
+						command = Text.join(command, Text.of(" "), Text.of(argument.getKey()));
+					}
+				}
+			}
+
+			list.add(Text.of(TextColors.RED, command));
+		}
+		
+		return list;
+	}
+	
 	public void execute(CommandSource src) {
 		ConfigurationNode config = ConfigManager.get().getConfig();
 
